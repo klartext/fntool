@@ -40,7 +40,7 @@ Just type the 'make' command at the shell prompt and the binary 'fntool' should 
 
 # Usage
 
-## Options
+## Options: Output of **fntool -h**
 
     fntool: unknown option '-h'.
     Use "datedir-filemove" following options:
@@ -63,3 +63,17 @@ Just type the 'make' command at the shell prompt and the binary 'fntool' should 
 
 It's necessary to use either -rm or -mv switch and then add other switches,
 which select the functionality.
+
+## Examples
+
+Move all pdf files into folders of the form yyyy-mm-dd,
+where yyyy is the year, mm the months and dd the day of month of the creation date of
+the pdf-file that is moved into this directory:
+
+    $ fntool -mv -td *.pdf
+
+Prepend the date of all files of current dir with date yyyy-mm-dd as well as time
+in the format hh'h'mm'm'ss's:
+
+    $ fntool -rn -ts *
+
