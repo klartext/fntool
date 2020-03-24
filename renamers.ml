@@ -12,10 +12,8 @@ open Fileinfo
 
 (* ------------------------------------------------ *)
 let filerename rnmode rnwhat fninfos =
-  let selected = List.filter (fun file -> Tools.is_regfile file.filename ) fninfos in (* filter: only regular files *)
 
-
-  (* the actual renamer function which takes a HOF 'renamer' to get thenew name *)
+  (* the actual renamer function which takes a HOF 'renamer' to get the new name *)
   let do_rename renamer file =
     let newname = renamer file in
 
@@ -29,16 +27,19 @@ let filerename rnmode rnwhat fninfos =
       end
   in
 
-  let renamer_pre file = match rnmode, rnwhat with
-    | `Insert,  `md5  -> Tools.get_insertname  file Tools.digest_of_file
-    | `Prepend, `md5  -> Tools.get_prependname file Tools.digest_of_file
-    | `Insert,  `date -> Tools.get_insertname  file Tools.datestring
-    | `Prepend, `date -> Tools.get_prependname file Tools.datestring
+  let extractor = match rnwhat with
+    | `md5  -> Tools.digest_of_file
+    | `date -> Tools.datestring
+  in
+
+  let renamer_pre file = match rnmode with
+    | `Insert  -> Tools.get_insertname  file extractor
+    | `Prepend -> Tools.get_prependname file extractor
   in
 
   let renamer = do_rename renamer_pre in
 
-  List.iter renamer selected
+  List.iter renamer fninfos
 
 
 

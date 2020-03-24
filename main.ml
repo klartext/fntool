@@ -78,11 +78,23 @@ let () =
 
 
 
-  (* filter filenames, depending on -ad switch *)
-  let filenames = if opt.allow_dir then opt.file_list else List.filter Tools.is_not_directory opt.file_list  in
+  let sel, ign = List.partition Tools.is_not_directory opt.file_list in
+
+  (* filter filenames, depending on switches -ad and -md5 *)
+  let filenames = match opt.allow_dir, use_md5 with
+    | true,  false -> opt.file_list (* dirs accepted *)
+    | _            -> sel (* no dirs *)
+  in
+
+  (* if md5 and allow-dir selected, then print message about on ignored directories *)
+  if use_md5 && opt.allow_dir && List.length ign > 0 then
+  begin
+    Printf.eprintf "Can't calculate checksums for directories, ignoring the following dirs:\n%!";
+    List.iter ( fun fname -> Printf.eprintf "ignoring directory: %s\n%!" fname ) ign
+  end;
 
   (* look up filename inofrmation *)
-  let fninfos = List.map Fileinfo.getfilenameinfo opt.file_list in (* ggf. filenames statt opt.file_list als vorfilterung dir/file *)
+  let fninfos = List.map Fileinfo.getfilenameinfo filenames in
 
   begin
     match !action, selected_prop, opt.rnmode with
@@ -99,8 +111,6 @@ let () =
           (* --------------------------------- *)
           | Move,    Md5,      _         -> no_valid_option_was_selected "Move with md5 not implemented (WTF)"
           | _,       Dirname,  _         -> no_valid_option_was_selected "-dn not available in this combination with the other switches"
-          (*
-          *)
           | _,       _,        Default    -> () (* is unneded *)
           | No_action, _        , _       -> () (* is excluded already *)
           (* --------------------------------- *)

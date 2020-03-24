@@ -51,7 +51,7 @@ let opt =  {
              md5        = false;
 
              rename     = false;
-             rnmode     = Default;    (* "d": use default *)
+             rnmode     = Default;
 
              move       = false;
 
