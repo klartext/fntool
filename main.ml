@@ -38,45 +38,47 @@ let () =
 *)
 
 
+  (* set action and check on contradiction between move and rename *)
+  (* ------------------------------------------------------------- *)
+  let action   = ref No_action in
+  begin
+    match opt.move, opt.rename with
+      | true,  false -> action := Move
+      | false, true  -> action := Rename
+      | false, false -> no_valid_option_was_selected "please select either -mv or -rn"
+      | true,  true  -> no_valid_option_was_selected "don't select both options: -mv and -rn"
+  end;
+
+
   let use_time = if opt.year || opt.month || opt.day || opt.hour || opt.min || opt.sec || opt.usefloat then true else false in
   let use_md5  = if opt.md5 then true else false in
+  let use_dirname = opt.dn in
 
   let selected_prop =
-    match use_time, use_md5, opt.dn with
-      | false, false, false -> no_valid_option_was_selected "select a property to use: time, md5 or dirname" (* better: show help-messages *)
-      (* ------------------------------------------------- *)
-      | false, true,  true  -> no_valid_option_was_selected "only use one option of: time, md5 or dirname"
-      | true,  false, true  -> no_valid_option_was_selected "only use one option of: time, md5 or dirname"
-      | true,  true,  false -> no_valid_option_was_selected "only use one option of: time, md5 or dirname"
-      | true,  true,  true  -> no_valid_option_was_selected "only use one option of: time, md5 or dirname"
-      (* ------------------------------------------------- *)
+    match use_time, use_md5, use_dirname with
       | false, false, true  -> Dirname
       | false, true,  false -> Md5
       | true,  false, false -> DateTime
+      (* ------------------------------------------------- *)
+      | false, false, false -> no_valid_option_was_selected "you have to select one of: time switch, md5 switch, dirname switch"
+      (* ------------------------------------------------- *)
+      | _                   -> no_valid_option_was_selected "only use one option of: time, md5 or dirname"
+      (* ------------------------------------------------- *)
   in
 
 
   (* set rename-mode default *)
   (* ----------------------- *)
   begin
-    match opt.rnmode, use_time, use_md5 with
-      | _,       false, false -> no_valid_option_was_selected "select: md5 or time"
-      | _,        true, true  -> no_valid_option_was_selected "not both options allowed togehter: md5 or time"
-      | Default, false, true  -> opt.rnmode <- Insert
-      | Default, true,  false -> opt.rnmode <- Prepend
-      | _, _, _ -> ()
+    match opt.rnmode, use_time, use_md5, use_dirname with
+      | Default, true,  false, false -> opt.rnmode <- Prepend
+      | Default, false, true,  false -> opt.rnmode <- Insert
+      | _,       false, true,  true  -> no_valid_option_was_selected "not both options allowed togehter: md5, dirname"
+      | _,       true,  false, true  -> no_valid_option_was_selected "not both options allowed togehter: time, dirname"
+      | _,       true,  true,  false -> no_valid_option_was_selected "not both options allowed togehter: time, md5"
+      | _, _, _, _ -> ()
   end;
 
-  (* set action and check on contradiction between move and rename *)
-  (* ------------------------------------------------------------- *)
-  let action   = ref No_action in
-  begin
-    match opt.move, opt.rename with
-      | false, false -> no_valid_option_was_selected "please select either -mv or -rn"
-      | true,  true  -> no_valid_option_was_selected "don't select both options: -mv and -rn"
-      | false, true  -> action := Rename
-      | true,  false -> action := Move
-  end;
 
 
   let filenames = if opt.allow_dir then opt.file_list else List.filter Tools.is_not_directory opt.file_list  in
@@ -86,26 +88,24 @@ let () =
   *)
 
   begin
-    match !action, opt.rnmode, selected_prop with
+    match !action, selected_prop, opt.rnmode with
           (* --------------------------------- *)
-          | Rename,  Prepend,  Md5       -> Renamers.filerename `Prepend `md5 fninfos; exit 0
-          | Rename,  Insert,   Md5       -> Renamers.filerename `Insert  `md5 fninfos; exit 0
-          | Rename,  Append,   Md5       -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1)
+          | Rename,  DateTime, Prepend   -> Renamers.filerename `Prepend `date fninfos; exit 0
+          | Rename,  DateTime, Insert    -> ()
+          | Rename,  DateTime, Append    -> ()
+          | Rename,  Md5,      Append    -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1)
+          | Rename,  Md5,      Insert    -> Renamers.filerename `Insert  `md5 fninfos; exit 0
+          | Rename,  Md5,      Prepend   -> Renamers.filerename `Prepend `md5 fninfos; exit 0
+          | Rename,  Dirname,  Prepend   -> Renamers.prependdirname filenames; exit 0
           (* --------------------------------- *)
-          | Move,    Prepend,  Md5       -> no_valid_option_was_selected "Move with md5 not implemented"
-          | Move,    Insert,   Md5       -> no_valid_option_was_selected "Move with md5 not implemented"
-          | Move,    Append,   Md5       -> no_valid_option_was_selected "Move with md5 not implemented"
+          | Move,    DateTime, _         -> Movers.movefilestodatedir filenames; exit 0
           (* --------------------------------- *)
-          | Rename,  Prepend,  DateTime  -> Renamers.filerename `Prepend `date fninfos; exit 0
-          | Rename,  Insert,   DateTime  -> ()
-          | Rename,  Append,   DateTime  -> ()
-          (* --------------------------------- *)
-          | Move,    _,        DateTime  -> Movers.movefilestodatedir filenames; exit 0
-          (* --------------------------------- *)
-          | Rename,  Prepend,  Dirname   -> Renamers.prependdirname filenames; exit 0
-          | _,       _,        Dirname   -> no_valid_option_was_selected "No certain available functionality has been seleted"
-          | _,       Default,  _         -> () (* is unneded *)
-          | No_action, _ ,     _         -> () (* is excluded already *)
+          | Move,    Md5,      _         -> no_valid_option_was_selected "Move with md5 not implemented (WTF)"
+          | _,       Dirname,  _         -> no_valid_option_was_selected "-dn not available in this combination with the other switches"
+          (*
+          *)
+          | _,       _,        Default   -> () (* is unneded *)
+          | No_action, _        , _       -> () (* is excluded already *)
           (* --------------------------------- *)
   end;
 

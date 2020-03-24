@@ -40,29 +40,68 @@ Just type the 'make' command at the shell prompt and the binary 'fntool' should 
 
 # Usage
 
-## Options: Output of **fntool -h**
+**fntool** is a merge of a bunch of ad-hoc filerenamer tools.
+So for this historical reason some of the functionality and command line
+switches may seem inconsistent.
 
-    fntool: unknown option '-h'.
-    Use "datedir-filemove" following options:
+The implemented functionality and defaults follow some semantic decisions
+of the old tools.
+
+So these properties may change in the future (for example more functionality
+and more consistent command line switches).
+
+
+## Options: Output of **fntool -help**
+
+    Use "fntool" with the following options:
       -ad      allow dir to be moved too.
       -md5     use md5-sum of file.
-      -ty      year: prepend file-date inclduding year (st_mtime).
-      -tmon    month: prepend file-date inclduding month (st_mtime).
-      -td      day: prepend file-date inclduding day (st_mtime).
-      -th      time: use hours of file-time (st_mtime) too.
-      -tm      time: use minutes of file-time (st_mtime) too.
-      -ts      time: use seconds of file-time (st_mtime) too.
-      -tf      time: use float of st.st_mtime (and no other date-/time-stuff)
+      -ty      time year:    use file's last modification time as YYYY.
+      -tmon    time month:   use file's last modification time as YYYY-MM.
+      -td      time day:     use file's last modification time as YYYY-MM-DD
+      -th      time hours:   use file's last modification time as YYYY-MM-DD_hh'h'
+      -tm      time minutes: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'
+      -ts      time seconds: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'ss's'
+      -tf      time float:   use file's last modification time since unix epoche as float value (%f)
       -rn      renaming file
       -rnmode  rename-mode: p = prepend, i = insert before extension, a = append (default: prepend).
       -mv      move file into a directory
-      -dn      use dirname
+      -dn      prepend current dirname to file / dir
       -help    Display this list of options
       --help   Display this list of options
 
+## Functionality in Detail, with Default Values
 
-It's necessary to use either -rm or -mv switch and then add other switches,
-which select the functionality.
+Currently there are three mutual exclusive actions available: rename (-rn), move (-mv), prepend-dirname (-dn).
+
+Based on certain use cases there are different subfunctionalities and defaults.
+
+
+The switches -ty, -tmon, ty, ..., -tf are **time** switches.
+
+
+### Rename (-rn)
+
+The renaming options allows to rename files, and with the -ad swicth also to rename directories.
+
+|  property  |  prepend  |  insert    |  append    |
+|  ------  |  -------  |  ------    |  ------    |
+|  time    |  default  |  ./.       |  ./.       |
+|  md5     |  default  |  -rnmode i |  -rnmode a |
+
+
+### Move (-mv)
+
+Moving means a directory will be created, based on the properties
+of the files. Properties are time or checksum.
+The files (and with option -ad directories also) will be then moved into these directories.
+
+
+### Prepend Dirnames (-dn)
+
+The files
+
+
 
 ## Examples
 

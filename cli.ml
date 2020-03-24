@@ -70,14 +70,15 @@ let parse () =
     Arg.align [
                 ("-ad",   Arg.Unit  (fun ()   -> opt.allow_dir <- true       ),        " allow dir to be moved too." );
                 ("-md5",  Arg.Unit  (fun ()   -> opt.md5       <- true       ),        " use md5-sum of file." );
+                ("-dn",   Arg.Unit  (fun ()   -> opt.dn        <- true         ),        " prepend current dirname to file / dir" );
 
-                ("-ty",   Arg.Unit  (fun ()   -> opt.year      <- true       ),        " year: prepend file-date inclduding year (st_mtime)." );
-                ("-tmon", Arg.Unit  (fun ()   -> opt.month     <- true       ),        " month: prepend file-date inclduding month (st_mtime)." );
-                ("-td",   Arg.Unit  (fun ()   -> opt.day       <- true       ),        " day: prepend file-date inclduding day (st_mtime)." );
-                ("-th",   Arg.Unit  (fun ()   -> opt.hour      <- true       ),        " time: use hours of file-time (st_mtime) too." );
-                ("-tm",   Arg.Unit  (fun ()   -> opt.min       <- true       ),        " time: use minutes of file-time (st_mtime) too." );
-                ("-ts",   Arg.Unit  (fun ()   -> opt.sec       <- true       ),        " time: use seconds of file-time (st_mtime) too." );
-                ("-tf",   Arg.Unit  (fun ()   -> opt.usefloat  <- true       ),        " time: use float of st.st_mtime (and no other date-/time-stuff)" );
+                ("-ty",   Arg.Unit  (fun ()   -> opt.year      <- true       ),        " time year:    use file's last modification time as YYYY." );
+                ("-tmon", Arg.Unit  (fun ()   -> opt.month     <- true       ),        " time month:   use file's last modification time as YYYY-MM." );
+                ("-td",   Arg.Unit  (fun ()   -> opt.day       <- true       ),        " time day:     use file's last modification time as YYYY-MM-DD" );
+                ("-th",   Arg.Unit  (fun ()   -> opt.hour      <- true       ),        " time hours:   use file's last modification time as YYYY-MM-DD_hh'h'" );
+                ("-tm",   Arg.Unit  (fun ()   -> opt.min       <- true       ),        " time minutes: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'" );
+                ("-ts",   Arg.Unit  (fun ()   -> opt.sec       <- true       ),        " time seconds: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'ss's'" );
+                ("-tf",   Arg.Unit  (fun ()   -> opt.usefloat  <- true       ),        " time float:   use file's last modification time since unix epoche as float value (%f)" );
 
                 ("-rn",   Arg.Unit  (fun ()   -> opt.rename    <- true         ),        " renaming file" );
                 ("-rnmode",  Arg.String  (fun select   -> opt.rnmode  <- match select with
@@ -88,13 +89,12 @@ let parse () =
                                                                  " rename-mode: p = prepend, i = insert before extension, a = append (default: prepend)." );
                 ("-mv",   Arg.Unit  (fun ()   -> opt.move      <- true         ),        " move file into a directory" );
 
-                ("-dn",   Arg.Unit  (fun ()   -> opt.dn        <- true         ),        " use dirname" );
 
               ]
   in
     Arg.parse args_list
       ( fun str -> opt.file_list <- str :: opt.file_list  )
-      "Use \"datedir-filemove\" following options:"
+      "Use \"fntool\" with the following options:"
 
 
 
