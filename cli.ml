@@ -13,12 +13,12 @@ type opt_t = {
                mutable allow_dir        :  bool;          (*  -ad: allow dirs to be moved too *)
                mutable file_list        :  string list;    (* *)
 
-               mutable year             :  bool;          (*  -ty: use file-date from st_mtime with year (yyyy) *)
-               mutable month            :  bool;          (*  -tmon: use file-date with month *)
-               mutable day              :  bool;          (*  -td: day use file-date with day *)
-               mutable hour             :  bool;          (*  -th: hour of file-date too *)
-               mutable min              :  bool;          (*  -tm: minutes of file-date too *)
-               mutable sec              :  bool;          (*  -th: seconds of file-date too *)
+               mutable year             :  bool;          (*  -ty:   YYYY                      *)
+               mutable month            :  bool;          (*  -tmon: YYYY-MM                   *)
+               mutable day              :  bool;          (*  -td:   YYYY-MM-DD                *)
+               mutable hour             :  bool;          (*  -th:   YYYY-MM-DD_hh'h'          *)
+               mutable min              :  bool;          (*  -tm:   YYYY-MM-DD_hh'h'mm'm'     *)
+               mutable sec              :  bool;          (*  -ts:   YYYY-MM-DD_hh'h'mm'm'ss's *)
                mutable usefloat         :  bool;          (*  -tf: use float value of st_mtime *)
 
                mutable md5              :  bool;          (*  -md5: *)
