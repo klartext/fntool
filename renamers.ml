@@ -15,18 +15,6 @@ let filerename rnmode rnwhat fninfos =
   let selected = List.filter (fun file -> Tools.is_regfile file.filename ) fninfos in (* filter: only regular files *)
 
 
-  (* generate the new filename for prepending *)
-  let get_prependname file propextract =
-    let propstring = propextract file.filename in
-    Filename.concat file.dirname (propstring ^ "." ^ file.basename)
-  in
-
-  (* generate the new filename for inserting before extension *)
-  let get_insertname file propextract =
-    let propstring = propextract file.filename in
-    Filename.concat file.dirname (file.chopped_basename ^ "." ^ propstring ^ file.extension)
-  in
-
   (* the actual renamer function which takes a HOF 'renamer' to get thenew name *)
   let do_rename renamer file =
     let newname = renamer file in
@@ -42,10 +30,10 @@ let filerename rnmode rnwhat fninfos =
   in
 
   let renamer_pre file = match rnmode, rnwhat with
-    | `Insert,  `md5  -> get_insertname  file Tools.digest_of_file
-    | `Prepend, `md5  -> get_prependname file Tools.digest_of_file
-    | `Insert,  `date -> get_insertname  file Tools.datestring
-    | `Prepend, `date -> get_prependname file Tools.datestring
+    | `Insert,  `md5  -> Tools.get_insertname  file Tools.digest_of_file
+    | `Prepend, `md5  -> Tools.get_prependname file Tools.digest_of_file
+    | `Insert,  `date -> Tools.get_insertname  file Tools.datestring
+    | `Prepend, `date -> Tools.get_prependname file Tools.datestring
   in
 
   let renamer = do_rename renamer_pre in

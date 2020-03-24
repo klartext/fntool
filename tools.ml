@@ -7,6 +7,8 @@
   Use this software at your own risk.
 *)
 
+open Fileinfo
+
 let date_of_file ?(month=false) ?(day=false) ?(hours=false) ?(minutes=false) ?(seconds=false) ?(usefloat=false) fname =
   let open Unix in
   let s = stat fname in
@@ -36,6 +38,19 @@ let digest_of_file filename = Digest.to_hex (Digest.file filename)
 let datestring fname =
   let open Cli in
   date_of_file ~month:opt.month ~day:opt.day ~hours:opt.hour ~minutes:opt.min ~seconds:opt.sec fname ~usefloat:opt.usefloat
+
+
+
+(* generate the new filename for prepending *)
+let get_prependname file propextract =
+  let propstring = propextract file.filename in
+  Filename.concat file.dirname (propstring ^ "." ^ file.basename)
+
+(* generate the new filename for inserting before extension *)
+let get_insertname file propextract =
+  let propstring = propextract file.filename in
+  Filename.concat file.dirname (file.chopped_basename ^ "." ^ propstring ^ file.extension)
+
 
 
 (* ----------------------------------- *)
