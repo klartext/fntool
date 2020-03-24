@@ -38,8 +38,8 @@ let () =
 *)
 
 
-  (* set action and check on contradiction between move and rename *)
-  (* ------------------------------------------------------------- *)
+  (* set action and check on contradiction between move- and rename-switch *)
+  (* --------------------------------------------------------------------- *)
   let action   = ref No_action in
   begin
     match opt.move, opt.rename with
@@ -70,30 +70,27 @@ let () =
   (* set rename-mode default *)
   (* ----------------------- *)
   begin
-    match opt.rnmode, use_time, use_md5, use_dirname with
-      | Default, true,  false, false -> opt.rnmode <- Prepend
-      | Default, false, true,  false -> opt.rnmode <- Insert
-      | _,       false, true,  true  -> no_valid_option_was_selected "not both options allowed togehter: md5, dirname"
-      | _,       true,  false, true  -> no_valid_option_was_selected "not both options allowed togehter: time, dirname"
-      | _,       true,  true,  false -> no_valid_option_was_selected "not both options allowed togehter: time, md5"
-      | _, _, _, _ -> ()
+    match opt.rnmode, selected_prop with
+      | Default, DateTime -> opt.rnmode <- Prepend
+      | Default, Md5      -> opt.rnmode <- Insert
+      | _,       _        -> () (* don't overwrite non-Defaults *)
   end;
 
 
 
+  (* filter filenames, depending on -ad switch *)
   let filenames = if opt.allow_dir then opt.file_list else List.filter Tools.is_not_directory opt.file_list  in
-  let fninfos = List.map Fileinfo.getfilenameinfo opt.file_list in (* filenames statt opt.file_list -> vorfilterung dir/file *)
-  (*
-  let filenames = filenames @ Tools.files_of_curdir() in
-  *)
+
+  (* look up filename inofrmation *)
+  let fninfos = List.map Fileinfo.getfilenameinfo opt.file_list in (* ggf. filenames statt opt.file_list als vorfilterung dir/file *)
 
   begin
     match !action, selected_prop, opt.rnmode with
           (* --------------------------------- *)
           | Rename,  DateTime, Prepend   -> Renamers.filerename `Prepend `date fninfos; exit 0
-          | Rename,  DateTime, Insert    -> ()
-          | Rename,  DateTime, Append    -> ()
-          | Rename,  Md5,      Append    -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1)
+          | Rename,  DateTime, Insert    -> () (* this option afaik makes no sense *)
+          | Rename,  DateTime, Append    -> () (* this option afaik makes no sense *)
+          | Rename,  Md5,      Append    -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1) (* this option afaik makes no sense *)
           | Rename,  Md5,      Insert    -> Renamers.filerename `Insert  `md5 fninfos; exit 0
           | Rename,  Md5,      Prepend   -> Renamers.filerename `Prepend `md5 fninfos; exit 0
           | Rename,  Dirname,  Prepend   -> Renamers.prependdirname filenames; exit 0
@@ -104,7 +101,7 @@ let () =
           | _,       Dirname,  _         -> no_valid_option_was_selected "-dn not available in this combination with the other switches"
           (*
           *)
-          | _,       _,        Default   -> () (* is unneded *)
+          | _,       _,        Default    -> () (* is unneded *)
           | No_action, _        , _       -> () (* is excluded already *)
           (* --------------------------------- *)
   end;
