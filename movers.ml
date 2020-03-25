@@ -10,7 +10,7 @@
 (* --------------- *)
 let movefiles_to_dir files dirname_maker =
   let mappinglist = List.map (fun file -> (file, dirname_maker file)) files in
-  let sorted = List.sort ( fun item1 item2 -> compare (snd item1) (snd item2) ) mappinglist in (* sort by date *)
+  let sorted = List.sort ( fun item1 item2 -> compare (snd item1) (snd item2) ) mappinglist in (* sort by dirname *)
   Tools.move_file_to_newdir sorted
 
 
