@@ -81,12 +81,20 @@ let parse () =
                 ("-tf",   Arg.Unit  (fun ()   -> opt.usefloat  <- true       ),        " time float:   use file's last modification time since unix epoche as float value (%f)" );
 
                 ("-rn",   Arg.Unit  (fun ()   -> opt.rename    <- true         ),        " renaming file" );
+
+                ("-rnmode",  Arg.String  (fun select   -> opt.rnmode  <- match select with
+                                                                                  | "p" -> Prepend
+                                                                                  | "i" -> Insert
+                                                                                  | _ -> raise Cli_selection),
+                                                                 " rename-mode: p = prepend, i = insert before extension (default: prepend)." );
+                (* ??does append mode make sense at all? Have no usecase in mind, where it might make sense!!
                 ("-rnmode",  Arg.String  (fun select   -> opt.rnmode  <- match select with
                                                                                   | "p" -> Prepend
                                                                                   | "i" -> Insert
                                                                                   | "a" -> Append
                                                                                   | _ -> raise Cli_selection),
                                                                  " rename-mode: p = prepend, i = insert before extension, a = append (default: prepend)." );
+                *)
                 ("-mv",   Arg.Unit  (fun ()   -> opt.move      <- true         ),        " move file into a directory" );
 
 

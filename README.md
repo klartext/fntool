@@ -41,14 +41,8 @@ Just type the 'make' command at the shell prompt and the binary 'fntool' should 
 # Usage
 
 **fntool** is a merge of a bunch of ad-hoc filerenamer tools.
-So for this historical reason some of the functionality and command line
-switches may seem inconsistent.
-
 The implemented functionality and defaults follow some semantic decisions
-of the old tools.
-
-So these properties may change in the future (for example more functionality
-and more consistent command line switches).
+of the old tools. Hopefully inconsistencies have been eradicated.
 
 
 ## Options: Output of **fntool -help**
@@ -56,6 +50,7 @@ and more consistent command line switches).
     Use "fntool" with the following options:
       -ad      allow dir to be moved too.
       -md5     use md5-sum of file.
+      -dn      prepend current dirname to file / dir
       -ty      time year:    use file's last modification time as YYYY.
       -tmon    time month:   use file's last modification time as YYYY-MM.
       -td      time day:     use file's last modification time as YYYY-MM-DD
@@ -64,30 +59,42 @@ and more consistent command line switches).
       -ts      time seconds: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'ss's'
       -tf      time float:   use file's last modification time since unix epoche as float value (%f)
       -rn      renaming file
-      -rnmode  rename-mode: p = prepend, i = insert before extension, a = append (default: prepend).
+      -rnmode  rename-mode: p = prepend, i = insert before extension (default: prepend).
       -mv      move file into a directory
-      -dn      prepend current dirname to file / dir
       -help    Display this list of options
       --help   Display this list of options
 
+
 ## Functionality in Detail, with Default Values
 
-Currently there are three mutual exclusive actions available: rename (-rn), move (-mv), prepend-dirname (-dn).
+There are two mutual exclusive actions available: rename (-rn), move (-mv).
 
 Based on certain use cases there are different subfunctionalities and defaults.
 
+The switches -rn, -mv **action** switches.
 
-The switches -ty, -tmon, ty, ..., -tf are **time** switches.
+The **property** switches at the moment have **time**, **checksum** and **dirname** as property.
+
+The switches -ty, -tmon, ty, ..., -tf are time switches.
+
+The switch -md5 is for the md5sum of a file.
+
+The switch -dn is the dirname switch.
+
+The switch -rnmode only has influence on the renaming action and allows to
+select between prepending and inserting before the filename extension.
 
 
 ### Rename (-rn)
 
 The renaming options allows to rename files, and with the -ad swicth also to rename directories.
 
-|  property  |  prepend  |  insert    |  append    |
-|  ------  |  -------  |  ------    |  ------    |
-|  time    |  default  |  ./.       |  ./.       |
-|  md5     |  default  |  -rnmode i |  -rnmode a |
+
+| property | default   |
+|----------|-----------|
+| time     |  prepend  |
+| md5      |  insert before extension   |
+| dirname  |  prepend  |
 
 
 ### Move (-mv)
@@ -96,11 +103,7 @@ Moving means a directory will be created, based on the properties
 of the files. Properties are time or checksum.
 The files (and with option -ad directories also) will be then moved into these directories.
 
-
-### Prepend Dirnames (-dn)
-
-The files
-
+The -rnmode switch is without influence here.
 
 
 ## Examples
