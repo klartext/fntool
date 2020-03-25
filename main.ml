@@ -82,9 +82,10 @@ let () =
   let sel, ign = List.partition Tools.is_not_directory opt.file_list in
 
   (* filter filenames, depending on switches -ad and -md5 *)
-  let filenames = match opt.allow_dir, use_md5 with
-    | true,  false -> opt.file_list (* dirs accepted *)
-    | _            -> sel (* no dirs *)
+  let filenames =
+    match opt.allow_dir, use_md5 with
+      | true,  false -> opt.file_list (* dirs accepted *)
+      | _            -> sel (* no dirs *)
   in
 
   (* if md5 and allow-dir selected, then print message about on ignored directories *)
