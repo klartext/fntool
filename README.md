@@ -30,7 +30,7 @@ files will solve the task.
 # Building fntool
 
 ## Prerequisites
-You need the standard installation of OCaml installed.
+You need the standard installation of OCaml installed (release 4.04 or newer).
 No extra packages are needed.
 
 ## Compilation
