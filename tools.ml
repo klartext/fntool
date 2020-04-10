@@ -44,7 +44,7 @@ let datestring fname =
 (* generate the new filename for prepending *)
 let get_prependname fileinfo propextract =
   let propstring = propextract fileinfo.filename in
-  Filename.concat fileinfo.dirname (propstring ^ "." ^ fileinfo.basename)
+  Filename.concat fileinfo.dirname (propstring ^ "_" ^ fileinfo.basename)
 
 (* generate the new filename for inserting before extension *)
 let get_insertname fileinfo propextract =
