@@ -32,12 +32,12 @@ let filerename rnmode rnwhat fninfos =
     | `date -> Tools.datestring
   in
 
-  let renamer_pre file = match rnmode with
-    | `Insert  -> Tools.get_insertname  file extractor
-    | `Prepend -> Tools.get_prependname file extractor
+  let renamer_pre extractfun file = match rnmode with
+    | `Insert  -> Tools.get_insertname  file extractfun
+    | `Prepend -> Tools.get_prependname file extractfun
   in
 
-  let renamer = do_rename renamer_pre in
+  let renamer = do_rename (renamer_pre extractor) in
 
   List.iter renamer fninfos
 
