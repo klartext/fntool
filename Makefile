@@ -3,7 +3,7 @@ all: native-code
 #all: debug-code
 
 
-SOURCES :=  commontypes.ml cli.ml fileinfo.ml tools.ml movers.ml renamers.ml main.ml
+SOURCES :=  commontypes.ml cli.ml tools.ml fileinfo.ml movers.ml renamers.ml main.ml
 
 PACKS := unix
 

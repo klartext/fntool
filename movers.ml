@@ -7,12 +7,12 @@
   Use this software at your own risk.
 *)
 
+open Fileinfo
+
 (* --------------- *)
-let movefiles_to_dir files dirname_maker =
-  let mappinglist = List.map (fun file -> (file, dirname_maker file)) files in
+let movefiles_to_dir mappinglist =
   let sorted = List.sort ( fun item1 item2 -> compare (snd item1) (snd item2) ) mappinglist in (* sort by dirname *)
-  Tools.move_file_to_newdir sorted
+  let fnsorted = List.map (fun (fileinfo, dir) -> fileinfo.fni.filename, dir) sorted in
+  Tools.move_files_to_newdir fnsorted
 
 
-let movefiles_to_datedir files = movefiles_to_dir files Tools.datestring
-let movefiles_to_md5dir  files = movefiles_to_dir files Tools.digest_of_file

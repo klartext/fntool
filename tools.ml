@@ -7,7 +7,9 @@
   Use this software at your own risk.
 *)
 
+(*
 open Fileinfo
+*)
 
 let date_of_file ?(month=false) ?(day=false) ?(hours=false) ?(minutes=false) ?(seconds=false) ?(usefloat=false) fname =
   let open Unix in
@@ -31,6 +33,7 @@ let date_of_file ?(month=false) ?(day=false) ?(hours=false) ?(minutes=false) ?(s
 
 
 
+
 (* ---------------- *)
 let digest_of_file filename = Digest.to_hex (Digest.file filename)
 
@@ -41,15 +44,20 @@ let datestring fname =
 
 
 
-(* generate the new filename for prepending *)
-let get_prependname fileinfo propextract =
-  let propstring = propextract fileinfo.filename in
-  Filename.concat fileinfo.dirname (propstring ^ "_" ^ fileinfo.basename)
+(* Map filenames to extracted properties *)
+(*
+KANN WEG 
+let create_mappinglist selection fileinfos =
+  let extractor =
+    match selection with
+      | `date -> datestring
+      | `md5  -> Fileinfo.digest_of_file
+      | `size -> Fileinfo.size_of_file_as_string
+  in
+  List.map (fun fileinfo -> (fileinfo, extractor fileinfo.fni.filename)) fileinfos
+*)
 
-(* generate the new filename for inserting before extension *)
-let get_insertname fileinfo propextract =
-  let propstring = propextract fileinfo.filename in
-  Filename.concat fileinfo.dirname (fileinfo.chopped_basename ^ "." ^ propstring ^ fileinfo.extension)
+
 
 
 
@@ -75,7 +83,7 @@ let files_of_curdir () =
   Sys.readdir "." |> Array.to_list
 
 
-let move_file_to_newdir namemapping =
+let move_files_to_newdir namemapping =
   List.iter ( fun (fname, dir_name) ->
                                   create_dir_if_not_exists dir_name;
 

@@ -21,6 +21,8 @@ type opt_t = {
                mutable sec              :  bool;          (*  -ts:   YYYY-MM-DD_hh'h'mm'm'ss's *)
                mutable usefloat         :  bool;          (*  -tf: use float value of st_mtime *)
 
+               mutable size             :  bool;          (*  -s: use size *)
+
                mutable md5              :  bool;          (*  -md5: *)
 
                mutable rename           :  bool;          (*  -rn rename *)
@@ -47,6 +49,8 @@ let opt =  {
              min        = false;
              sec        = false;
              usefloat   = false;
+
+             size       = false;
 
              md5        = false;
 
@@ -79,6 +83,8 @@ let parse () =
                 ("-tm",   Arg.Unit  (fun ()   -> opt.min       <- true       ),        " time minutes: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'" );
                 ("-ts",   Arg.Unit  (fun ()   -> opt.sec       <- true       ),        " time seconds: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'ss's'" );
                 ("-tf",   Arg.Unit  (fun ()   -> opt.usefloat  <- true       ),        " time float:   use file's last modification time since unix epoche as float value (%f)" );
+
+                ("-s",   Arg.Unit  (fun ()   -> opt.size  <- true            ),        " size: use filesize" );
 
                 ("-rn",   Arg.Unit  (fun ()   -> opt.rename    <- true         ),        " renaming file" );
 

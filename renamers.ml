@@ -10,36 +10,45 @@
 open Fileinfo
 
 
+(* generate the new filename for prepending *)
+let get_prependname fileinfo propstring =
+  Filename.concat fileinfo.fni.dirname (propstring ^ "_" ^ fileinfo.fni.basename)
+
+(* generate the new filename for inserting before extension *)
+let get_insertname fileinfo propstring =
+  Filename.concat fileinfo.fni.dirname (fileinfo.fni.chopped_basename ^ "." ^ propstring ^ fileinfo.fni.extension)
+
+
+let namecreator_gen select =
+  match select with
+    | `Insert  -> get_insertname
+    | `Prepend -> get_prependname
+
+
+(* the actual renamer function which takes a HOF 'renamer' to get the new name *)
+let do_rename fileinfo newname =
+  if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" fileinfo.fni.filename newname )
+  else
+    begin
+      Printf.printf "renaming %s" fileinfo.fni.filename;
+      Printf.printf " to %s\n" newname;
+      flush stdout;
+      Sys.rename fileinfo.fni.filename newname
+    end
+
+
 (* ------------------------------------------------ *)
-let filerename rnmode rnwhat fninfos =
+let filerename rnmode mappinglist_fileinfo_prperty =
 
-  (* the actual renamer function which takes a HOF 'renamer' to get the new name *)
-  let do_rename renamer file =
-    let newname = renamer file in
+  let namecreator = namecreator_gen rnmode in
 
-    if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" file.filename newname )
-    else
-      begin
-        Printf.printf "renaming %s" file.filename;
-        Printf.printf " to %s\n" newname;
-        flush stdout;
-        Sys.rename file.filename newname
-      end
-  in
+  (*
+  let fileinfo_property_mapping = Tools.create_mappinglist rnwhat fileinfos in
+  *)
 
-  let extractor = match rnwhat with
-    | `md5  -> Tools.digest_of_file
-    | `date -> Tools.datestring
-  in
-
-  let renamer_pre extractfun file = match rnmode with
-    | `Insert  -> Tools.get_insertname  file extractfun
-    | `Prepend -> Tools.get_prependname file extractfun
-  in
-
-  let renamer = do_rename (renamer_pre extractor) in
-
-  List.iter renamer fninfos
+  List.iter (fun (fileinfo, propname) -> let newname = namecreator fileinfo propname in
+                                         do_rename fileinfo newname
+            ) mappinglist_fileinfo_prperty
 
 
 
@@ -52,32 +61,31 @@ let prtstuff cwd fn fndn ddn newbase = Printf.printf "%40s %40s %40s %40s %40s\n
 (* prepends the dirname in which the file/directory lives *)
 (* works on files and dirs as well                        *)
 (* ------------------------------------------------------ *)
-let prependdirname filenames =
+let prependdirname_single_file fileinfo =
+  let fname = fileinfo.fni.filename in
   let cwd = Unix.getcwd() in (* current working directory (full abspath) *)
+  let fi = Fileinfo.getfilenameinfo fname in
 
-  (*
-  prtstuff "CWD" "FNAME" "FNDN" "DDN" "NEWBASE";
-  *)
+  if Sys.file_exists fname then
+    begin
 
-  List.iter ( fun fname ->
-                           if Sys.file_exists fname then
-                             begin
+      let fndn = fi.dirname in (* filename-dirname (dirname o filename) *)
 
-                               let fndn = Filename.dirname fname in (* filename-dirname (dirname o filename) *)
+      let usepath = Tools.longestpath cwd fndn in
 
-                               let usepath = Tools.longestpath cwd fndn in
+      let ddn   = Tools.directdir usepath in
+      let file_basename = fi.basename in
 
-                               let ddn   = Tools.directdir usepath in
-                               let file_basename = Filename.basename fname in
+      let new_basename = if fndn = "." then ddn ^ "_" ^ file_basename else (Tools.directdir fndn) ^ "_" ^ file_basename in
+      let new_fullpath = if fndn = "." then new_basename else Filename.concat fndn new_basename in
 
-                               let new_basename = if fndn = "." then ddn ^ "_" ^ file_basename else (Tools.directdir fndn) ^ "_" ^ file_basename in
-                               let new_fullpath = if fndn = "." then new_basename else Filename.concat fndn new_basename in
+      Printf.printf "renaming: %s to %s\n" fname new_fullpath;
+      Sys.rename fname new_fullpath
+    end
+  else
+   Printf.eprintf "File %s does not exist!\n" fname
 
-                               Printf.printf "renaming: %s to %s\n" fname new_fullpath;
-                               Sys.rename fname new_fullpath
-                             end
-                           else
-                             Printf.eprintf "File %s does not exist!\n" fname
-            ) filenames
+let prependdirname fileinfos =
+  List.iter prependdirname_single_file fileinfos
 
 
