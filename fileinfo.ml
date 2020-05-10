@@ -71,16 +71,6 @@ let create_prepend_dirname fname =
   new_fullpath
 
 
-let create_mappinglist selection fileinfos =
-  let extractor =
-    match selection with
-      | `date -> Tools.datestring
-      | `md5  -> digest_of_file
-      | `size -> size_of_file_as_string
-      | `dirname -> create_prepend_dirname
-  in
-  List.map (fun fileinfo -> (fileinfo, extractor fileinfo.fni.filename)) fileinfos
-
 
 
 (* --------------------------------------- *)
@@ -91,6 +81,17 @@ let getfileinfo propselector  fname =
 
   { fni = getfilenameinfo fname; digest = md5; datetime = dt; sizestr = sz }
 
+
+let create_mappinglist selection filenames =
+  let fileinfos = List.map (fun fn -> getfileinfo selection fn) filenames in
+  let property_extractor =
+    match selection with
+      | `date -> Tools.datestring
+      | `md5  -> digest_of_file
+      | `size -> size_of_file_as_string
+      | `dirname -> create_prepend_dirname
+  in
+  List.map (fun fileinfo -> (fileinfo, property_extractor fileinfo.fni.filename)) fileinfos
 
 
 

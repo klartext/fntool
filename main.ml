@@ -76,6 +76,7 @@ let () =
       | Default, Dirname -> opt.rnmode <- Prepend
       | Default, DateTime -> opt.rnmode <- Prepend
       | Default, Md5      -> opt.rnmode <- Insert
+      | Default, Size     -> opt.rnmode <- Prepend
       | _,       _        -> () (* don't overwrite non-Defaults *)
   end;
 
@@ -99,8 +100,7 @@ let () =
 
   (* look up file-information and extract the property-string *)
   let selector = match selected_prop with DateTime -> `date | Md5 -> `md5 | Size -> `size | Dirname -> `dirname in
-  let fileinfos = List.map (fun fn -> Fileinfo.getfileinfo selector fn) filenames in
-  let mappinglist = Fileinfo.create_mappinglist selector fileinfos in (* (fileinfo * extracted_property) list *)
+  let mappinglist = Fileinfo.create_mappinglist selector filenames in (* (fileinfo * extracted_property) list *)
 
   (* call the functions that do the renaming / moving *)
   (* append option is not implemented so far          *)
@@ -113,8 +113,8 @@ let () =
           | Rename,  Md5,      Append    -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1)
           | Rename,  Md5,      Insert    -> Renamers.filerename `Insert  mappinglist; exit 0
           | Rename,  Md5,      Prepend   -> Renamers.filerename `Prepend mappinglist; exit 0
-          | Rename,  Dirname,  Prepend   -> Renamers.prependdirname fileinfos; exit 0
-          | Rename,  Size,     Prepend   -> Renamers.prependdirname fileinfos; exit 0
+          | Rename,  Dirname,  Prepend   -> Renamers.filerename `Dirname mappinglist; exit 0
+          | Rename,  Size,     Prepend   -> Renamers.filerename `Size mappinglist; exit 0
           | Rename,  Size,     _         -> (Printf.eprintf "Size only supported to be prepended\n%!"; exit 1)
           (* --------------------------------- *)
           | Move,    DateTime, _         -> Movers.movefiles_to_dir mappinglist; exit 0

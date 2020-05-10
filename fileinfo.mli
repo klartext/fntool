@@ -18,7 +18,7 @@ val size_of_file_as_string : string -> string
 val digest_of_file : string -> string
 val getfilenameinfo : string -> fninfo
 val create_prepend_dirname : string -> string
-val create_mappinglist :
-  [< `date | `dirname | `md5 | `size ] ->
-  fileinfo list -> (fileinfo * string) list
 val getfileinfo : [> `date | `md5 | `size ] -> string -> fileinfo
+val create_mappinglist :
+  [< `date | `dirname | `md5 | `size > `date `md5 `size ] ->
+  string list -> (fileinfo * string) list
