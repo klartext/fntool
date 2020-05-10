@@ -1,5 +1,5 @@
 (*
-  This source code is part of the program 'tfntool'
+  This source code is part of the program 'fntool'
 
   Copyright: Oliver Bandel
   Copyleft:  GNU GPL v3 or higher/later version
