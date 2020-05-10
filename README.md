@@ -58,6 +58,7 @@ of the old tools. Hopefully inconsistencies have been eradicated.
       -tm      time minutes: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'
       -ts      time seconds: use file's last modification time as YYYY-MM-DD_hh'h'mm'm'ss's'
       -tf      time float:   use file's last modification time since unix epoche as float value (%f)
+      -s       size: use filesize
       -rn      renaming file
       -rnmode  rename-mode: p = prepend, i = insert before extension (default: prepend).
       -mv      move file into a directory
@@ -79,6 +80,8 @@ The switches -ty, -tmon, ty, ..., -tf are time switches.
 
 The switch -md5 is for the md5sum of a file.
 
+The switch -s is the filesize switch.
+
 The switch -dn is the dirname switch.
 
 The switch -rnmode only has influence on the renaming action and allows to
@@ -95,6 +98,7 @@ The renaming options allows to rename files, and with the -ad swicth also to ren
 | time     |  prepend  |
 | md5      |  insert before extension   |
 | dirname  |  prepend  |
+| size     |  prepend  |
 
 
 ### Move (-mv)
