@@ -13,10 +13,9 @@ open Fileinfo
 (* generate the new filename for prepending/inserting from property-string *)
 let get_newname_from_propstring select fileinfo propstring =
   match select with
-    | `Size
     | `Prepend -> Filename.concat fileinfo.fni.dirname (propstring ^ "_" ^ fileinfo.fni.basename)
     | `Insert  -> Filename.concat fileinfo.fni.dirname (fileinfo.fni.chopped_basename ^ "." ^ propstring ^ fileinfo.fni.extension)
-    | `Dirname -> propstring
+    | `Replace -> propstring
 
 
 (* the actual renamer function which takes a HOF 'renamer' to get the new name *)

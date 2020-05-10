@@ -113,8 +113,8 @@ let () =
           | Rename,  Md5,      Append    -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1)
           | Rename,  Md5,      Insert    -> Renamers.filerename `Insert  mappinglist; exit 0
           | Rename,  Md5,      Prepend   -> Renamers.filerename `Prepend mappinglist; exit 0
-          | Rename,  Dirname,  Prepend   -> Renamers.filerename `Dirname mappinglist; exit 0
-          | Rename,  Size,     Prepend   -> Renamers.filerename `Size mappinglist; exit 0
+          | Rename,  Dirname,  Prepend   -> Renamers.filerename `Replace mappinglist; exit 0
+          | Rename,  Size,     Prepend   -> Renamers.filerename `Prepend mappinglist; exit 0
           | Rename,  Size,     _         -> (Printf.eprintf "Size only supported to be prepended\n%!"; exit 1)
           (* --------------------------------- *)
           | Move,    DateTime, _         -> Movers.movefiles_to_dir mappinglist; exit 0
