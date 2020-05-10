@@ -98,9 +98,9 @@ let () =
   end;
 
   (* look up file-information and extract the property-string *)
-  let selector = match selected_prop with DateTime -> `date | Md5 -> `md5 | Size -> `size in
+  let selector = match selected_prop with DateTime -> `date | Md5 -> `md5 | Size -> `size | Dirname -> `dirname in
   let fileinfos = List.map (fun fn -> Fileinfo.getfileinfo selector fn) filenames in
-  let mappinglist = Tools.create_mappinglist selector fileinfos in (* (fileinfo * extracted_property) list *)
+  let mappinglist = Fileinfo.create_mappinglist selector fileinfos in (* (fileinfo * extracted_property) list *)
 
   (* call the functions that do the renaming / moving *)
   (* append option is not implemented so far          *)

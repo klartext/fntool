@@ -10,19 +10,11 @@
 open Fileinfo
 
 
-(* generate the new filename for prepending *)
-let get_prependname fileinfo propstring =
-  Filename.concat fileinfo.fni.dirname (propstring ^ "_" ^ fileinfo.fni.basename)
-
-(* generate the new filename for inserting before extension *)
-let get_insertname fileinfo propstring =
-  Filename.concat fileinfo.fni.dirname (fileinfo.fni.chopped_basename ^ "." ^ propstring ^ fileinfo.fni.extension)
-
-
-let namecreator_gen select =
+(* generate the new filename for prepending/inserting from property-string *)
+let get_newname_from_propstring select fileinfo propstring =
   match select with
-    | `Insert  -> get_insertname
-    | `Prepend -> get_prependname
+    | `Prepend -> Filename.concat fileinfo.fni.dirname (propstring ^ "_" ^ fileinfo.fni.basename)
+    | `Insert  -> Filename.concat fileinfo.fni.dirname (fileinfo.fni.chopped_basename ^ "." ^ propstring ^ fileinfo.fni.extension)
 
 
 (* the actual renamer function which takes a HOF 'renamer' to get the new name *)
@@ -40,7 +32,7 @@ let do_rename fileinfo newname =
 (* ------------------------------------------------ *)
 let filerename rnmode mappinglist_fileinfo_prperty =
 
-  let namecreator = namecreator_gen rnmode in
+  let namecreator = get_newname_from_propstring rnmode in
 
   (*
   let fileinfo_property_mapping = Tools.create_mappinglist rnwhat fileinfos in
@@ -61,6 +53,24 @@ let prtstuff cwd fn fndn ddn newbase = Printf.printf "%40s %40s %40s %40s %40s\n
 (* prepends the dirname in which the file/directory lives *)
 (* works on files and dirs as well                        *)
 (* ------------------------------------------------------ *)
+let create_prepend_dirname fname =
+  let cwd = Unix.getcwd() in (* current working directory (full abspath) *)
+  let fi = Fileinfo.getfilenameinfo fname in
+
+  let fndn = fi.dirname in (* filename-dirname (dirname o filename) *)
+
+  let usepath = Tools.longestpath cwd fndn in
+
+  let ddn   = Tools.directdir usepath in
+  let file_basename = fi.basename in
+
+  let new_basename = if fndn = "." then ddn ^ "_" ^ file_basename else (Tools.directdir fndn) ^ "_" ^ file_basename in
+  let new_fullpath = if fndn = "." then new_basename else Filename.concat fndn new_basename in
+
+  new_fullpath
+
+
+
 let prependdirname_single_file fileinfo =
   let fname = fileinfo.fni.filename in
   let cwd = Unix.getcwd() in (* current working directory (full abspath) *)
@@ -68,17 +78,7 @@ let prependdirname_single_file fileinfo =
 
   if Sys.file_exists fname then
     begin
-
-      let fndn = fi.dirname in (* filename-dirname (dirname o filename) *)
-
-      let usepath = Tools.longestpath cwd fndn in
-
-      let ddn   = Tools.directdir usepath in
-      let file_basename = fi.basename in
-
-      let new_basename = if fndn = "." then ddn ^ "_" ^ file_basename else (Tools.directdir fndn) ^ "_" ^ file_basename in
-      let new_fullpath = if fndn = "." then new_basename else Filename.concat fndn new_basename in
-
+      let new_fullpath = create_prepend_dirname fileinfo.fni.filename in
       Printf.printf "renaming: %s to %s\n" fname new_fullpath;
       Sys.rename fname new_fullpath
     end
@@ -87,5 +87,4 @@ let prependdirname_single_file fileinfo =
 
 let prependdirname fileinfos =
   List.iter prependdirname_single_file fileinfos
-
 

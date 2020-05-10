@@ -43,24 +43,6 @@ let datestring fname =
   date_of_file ~month:opt.month ~day:opt.day ~hours:opt.hour ~minutes:opt.min ~seconds:opt.sec fname ~usefloat:opt.usefloat
 
 
-
-(* Map filenames to extracted properties *)
-(*
-KANN WEG 
-let create_mappinglist selection fileinfos =
-  let extractor =
-    match selection with
-      | `date -> datestring
-      | `md5  -> Fileinfo.digest_of_file
-      | `size -> Fileinfo.size_of_file_as_string
-  in
-  List.map (fun fileinfo -> (fileinfo, extractor fileinfo.fni.filename)) fileinfos
-*)
-
-
-
-
-
 (* ----------------------------------- *)
 (* ----------------------------------- *)
 let is_regfile fname =

@@ -54,6 +54,22 @@ let getfilenameinfo fn =
           extension         =  Filename.extension file_basename;
         }
 
+let create_prepend_dirname fname =
+  let cwd = Unix.getcwd() in (* current working directory (full abspath) *)
+  let filenameinfo = getfilenameinfo fname in
+
+  let fndn = filenameinfo.dirname in (* filename-dirname (dirname o filename) *)
+
+  let usepath = Tools.longestpath cwd fndn in
+
+  let ddn   = Tools.directdir usepath in
+  let file_basename = filenameinfo.basename in
+
+  let new_basename = if fndn = "." then ddn ^ "_" ^ file_basename else (Tools.directdir fndn) ^ "_" ^ file_basename in
+  let new_fullpath = if fndn = "." then new_basename else Filename.concat fndn new_basename in
+
+  new_fullpath
+
 
 let create_mappinglist selection fileinfos =
   let extractor =
@@ -61,6 +77,7 @@ let create_mappinglist selection fileinfos =
       | `date -> Tools.datestring
       | `md5  -> digest_of_file
       | `size -> size_of_file_as_string
+      | `dirname -> create_prepend_dirname
   in
   List.map (fun fileinfo -> (fileinfo, extractor fileinfo.fni.filename)) fileinfos
 
