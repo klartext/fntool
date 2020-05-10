@@ -86,10 +86,10 @@ let create_mappinglist selection filenames =
   let fileinfos = List.map (fun fn -> getfileinfo selection fn) filenames in
   let property_extractor =
     match selection with
-      | `date -> Tools.datestring
-      | `md5  -> digest_of_file
-      | `size -> size_of_file_as_string
-      | `dirname -> create_prepend_dirname
+      | `date -> Tools.datestring (* extracted property *)
+      | `md5  -> digest_of_file (* extracted property *)
+      | `size -> size_of_file_as_string (* extracted property *)
+      | `dirname -> create_prepend_dirname (* complete relacement (newname), not only property *)
   in
   List.map (fun fileinfo -> (fileinfo, property_extractor fileinfo.fni.filename)) fileinfos
 
