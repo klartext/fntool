@@ -121,7 +121,7 @@ let () =
           (* --------------------------------- *)
           | Move,    Md5,      _         -> Movers.movefiles_to_dir mappinglist; exit 0
           | Move,    Size,     _         -> Movers.movefiles_to_dir mappinglist; exit 0
-          | _,       Dirname,  _         -> no_valid_option_was_selected "-dn not available in this combination with the other switches"
+          | _,       Dirname,  _         -> no_valid_option_was_selected "-dn option only allowed with prepend-mode"
           | _,       _,        Default    -> () (* is unneded *)
           | No_action, _        , _       -> () (* is excluded already *)
           (* --------------------------------- *)
