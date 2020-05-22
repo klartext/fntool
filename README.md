@@ -12,10 +12,17 @@ the filenames or put them into directories that reflect the certain kind of
 order in their names.
 
 ## Use-cases
-The order could be the creation-date of the file.
-So if you have a bunch of downloaded files, and you want to order the files
-according to the order of the download time (which means: creation time of
-that file), then this can be done easily with this tool.
+Imagine you needed to download daily provided data over some weeks
+and you used a cronjob and wget for it.
+There will be numbers appended to the files by wget, but the order
+listed by the shell is different than the order of the download-times.
+The same problem occurs, when loading the files via globbing into your
+data analysis machinery.
+So, you could fiddle around with regular expressions and sorting to get the
+files loaded in the correct order. Or you could just rename the files, so that
+the download-date (creation date) is prepended to each of the files.
+Then the timely order of the downloads is reflected in the filenames and make
+it much easier to use your files.
 
 Another use case would be: collect all files of a certain date together into a
 directory, named after the date of the files.
