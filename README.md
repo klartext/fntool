@@ -11,6 +11,9 @@ The reason to do that is, to achieve a certain kind of order of the files in
 the filenames or put them into directories that reflect the certain kind of
 order in their names.
 
+## Disclaimer
+Use this tool at your own risk.
+
 ## Use-cases
 Imagine you needed to download daily provided data over some weeks
 and you used a cronjob and wget for it.
