@@ -81,13 +81,13 @@ let () =
   end;
 
 
-
-  let sel, ign = List.partition Tools.is_not_directory opt.file_list in
+  let files = List.filter Sys.file_exists opt.file_list in
+  let sel, ign = List.partition Tools.is_not_directory files in
 
   (* filter filenames, depending on switches -ad and -md5 *)
   let filenames =
     match opt.allow_dir, use_md5 with
-      | true,  false -> opt.file_list (* dirs accepted *)
+      | true,  false -> files (* dirs accepted *)
       | _            -> sel (* no dirs *)
   in
 
