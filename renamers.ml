@@ -7,11 +7,9 @@
   Use this software at your own risk.
 *)
 
-open Fileinfo
-
 
 (* generate the new filename for prepending/inserting from property-string *)
-let get_newname_from_propstring select fileinfo propstring =
+let get_newname_from_propstring select (fileinfo : Fileinfo.fileinfo) propstring =
   match select with
     | `Prepend -> Filename.concat fileinfo.fni.dirname (propstring ^ "_" ^ fileinfo.fni.basename)
     | `Insert  -> Filename.concat fileinfo.fni.dirname (fileinfo.fni.chopped_basename ^ "." ^ propstring ^ fileinfo.fni.extension)
@@ -19,7 +17,7 @@ let get_newname_from_propstring select fileinfo propstring =
 
 
 (* the actual renamer function which takes a HOF 'renamer' to get the new name *)
-let do_rename fileinfo newname =
+let do_rename (fileinfo : Fileinfo.fileinfo) newname =
   if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" fileinfo.fni.filename newname )
   else
     begin
