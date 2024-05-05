@@ -54,9 +54,6 @@ let is_regfile fname =
 
 
 (* --------------- *)
-let create_dir_if_not_exists dirname =
-  if Sys.file_exists dirname then () else Unix.mkdir dirname 0o700
-
 let is_not_directory file = Sys.is_directory file |> not
 let directdir path = String.split_on_char Filename.dir_sep.[0] path |> List.rev |> List.hd
 let longestpath cwd fndn = if String.length cwd >= String.length fndn then cwd else fndn
@@ -64,14 +61,4 @@ let longestpath cwd fndn = if String.length cwd >= String.length fndn then cwd e
 let files_of_curdir () =
   Sys.readdir "." |> Array.to_list
 
-
-let move_files_to_newdir namemapping =
-  List.iter ( fun (fname, dir_name) ->
-                                  create_dir_if_not_exists dir_name;
-
-                                  let newname = Filename.concat dir_name fname in
-
-                                  Unix.rename fname newname;
-                                  Printf.printf "file moved to dir:  %12s  <---  %s\n%!" dir_name fname
-            ) namemapping
 

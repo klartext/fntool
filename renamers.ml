@@ -16,25 +16,13 @@ let get_newname_from_propstring select (fileinfo : Fileinfo.fileinfo) propstring
     | `Replace -> propstring
 
 
-(* the actual renamer function which takes a HOF 'renamer' to get the new name *)
-let do_rename (fileinfo : Fileinfo.fileinfo) newname =
-  if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" fileinfo.fni.filename newname )
-  else
-    begin
-      Printf.printf "renaming %s" fileinfo.fni.filename;
-      Printf.printf " to %s\n" newname;
-      flush stdout;
-      Sys.rename fileinfo.fni.filename newname
-    end
-
-
 (* ------------------------------------------------ *)
 let filerename rnmode mappinglist_fileinfo_prperty =
 
   let namecreator = get_newname_from_propstring rnmode in
 
   List.iter (fun (fileinfo, propname) -> let newname = namecreator fileinfo propname in
-                                         do_rename fileinfo newname
+                                         Fswrite.do_rename fileinfo newname
             ) mappinglist_fileinfo_prperty
 
 
