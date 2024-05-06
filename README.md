@@ -72,6 +72,7 @@ of the old tools. Hopefully inconsistencies have been eradicated.
       -rn      renaming file
       -rnmode  rename-mode: p = prepend, i = insert before extension (default: prepend).
       -mv      move file into a directory
+      -gitcmd  no move/rename, instead print 'git mv' commands - dirs will still be created
       -help    Display this list of options
       --help   Display this list of options
 
@@ -118,6 +119,21 @@ of the files. Properties are time or checksum.
 The files (and with option -ad directories also) will be then moved into these directories.
 
 The -rnmode switch is without influence here.
+
+
+### Git Commands (-gitcmd)
+
+Instead of actually moving or renaming files,
+only git commands for the renaming/moving are printed to stdout.
+(To execute them, paste them into your terminal for example, or redirect the output into a file to be executed.)
+
+If directories needs to be created, this will still be done.
+
+This is an additional command switch, which can be added to either `-mv` or `-rn`.
+It does not replace these switches.
+
+
+
 
 
 ## Examples

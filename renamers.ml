@@ -17,13 +17,16 @@ let get_newname_from_propstring select (fileinfo : Fileinfo.fileinfo) propstring
 
 
 (* ------------------------------------------------ *)
-let filerename rnmode mappinglist_fileinfo_prperty =
+let filerename rnmode mappinglist_fileinfo_prperty only_gitcmd =
 
   let namecreator = get_newname_from_propstring rnmode in
 
   let renamer (fileinfo, propname) =
     let newname = namecreator fileinfo propname in
-    Fswrite.do_rename fileinfo newname
+
+    if only_gitcmd
+    then Fswrite.gitcmd_do_rename fileinfo newname
+    else Fswrite.do_rename fileinfo newname
   in
     List.iter renamer mappinglist_fileinfo_prperty
 

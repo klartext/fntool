@@ -32,6 +32,7 @@ type opt_t = {
                mutable dn               :  bool;          (*  -dn: use dirname - all other cli-switches ignored*)
 
                mutable cwd              :  bool;          (*  -cwd: use all files of the current working dircetory *)
+               mutable gitcmd           :  bool;          (*  -gitcmd: dont rename/move files (still create dirs), instead print 'git mv' commands *)
              }
 
 
@@ -62,6 +63,7 @@ let opt =  {
              dn         = false;
 
              cwd        = false;
+             gitcmd     = false;
 
            }
 
@@ -102,6 +104,7 @@ let parse () =
                                                                  " rename-mode: p = prepend, i = insert before extension, a = append (default: prepend)." );
                 *)
                 ("-mv",   Arg.Unit  (fun ()   -> opt.move      <- true         ),        " move file into a directory" );
+                ("-gitcmd", Arg.Unit (fun ()   -> opt.gitcmd   <- true         ),        " no move/rename, instead print 'git mv' commands - dirs will still be created" );
 
 
               ]

@@ -15,6 +15,7 @@ type opt_t = {
   mutable move : bool;
   mutable dn : bool;
   mutable cwd : bool;
+  mutable gitcmd : bool;
 }
 val opt : opt_t
 val parse : unit -> unit

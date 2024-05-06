@@ -42,9 +42,6 @@ struct
       if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" fileinfo.fni.filename newname )
       else
         begin
-          Printf.printf "renaming %s" fileinfo.fni.filename;
-          Printf.printf " to %s\n" newname;
-          flush stdout;
           IN.rename_or_print fileinfo.fni.filename newname
         end
 end
@@ -58,6 +55,9 @@ struct
         Printf.printf "file moved to dir:  %12s  <---  %s\n%!" dirname oldfn
 
     let rename_or_print oldfn newfn =
+        Printf.printf "renaming %s" oldfn;
+        Printf.printf " to %s\n" newfn;
+        flush stdout;
         Sys.rename oldfn newfn
 end
 

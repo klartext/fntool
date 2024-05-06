@@ -107,20 +107,20 @@ let () =
   begin
     match !action, selected_prop, opt.rnmode with
           (* --------------------------------- *)
-          | Rename,  DateTime, Prepend   -> Renamers.filerename `Prepend mappinglist; exit 0
-          | Rename,  DateTime, Insert    -> Renamers.filerename `Insert  mappinglist; exit 0
+          | Rename,  DateTime, Prepend   -> Renamers.filerename `Prepend mappinglist opt.gitcmd; exit 0
+          | Rename,  DateTime, Insert    -> Renamers.filerename `Insert  mappinglist opt.gitcmd; exit 0
           | Rename,  DateTime, Append    -> (Printf.eprintf "Appending rename not supported for time switches\n%!"; exit 1)
           | Rename,  Md5,      Append    -> (Printf.eprintf "Appending rename not supported for md5\n%!"; exit 1)
-          | Rename,  Md5,      Insert    -> Renamers.filerename `Insert  mappinglist; exit 0
-          | Rename,  Md5,      Prepend   -> Renamers.filerename `Prepend mappinglist; exit 0
-          | Rename,  Dirname,  Prepend   -> Renamers.filerename `Replace mappinglist; exit 0
-          | Rename,  Size,     Prepend   -> Renamers.filerename `Prepend mappinglist; exit 0
+          | Rename,  Md5,      Insert    -> Renamers.filerename `Insert  mappinglist opt.gitcmd; exit 0
+          | Rename,  Md5,      Prepend   -> Renamers.filerename `Prepend mappinglist opt.gitcmd; exit 0
+          | Rename,  Dirname,  Prepend   -> Renamers.filerename `Replace mappinglist opt.gitcmd; exit 0
+          | Rename,  Size,     Prepend   -> Renamers.filerename `Prepend mappinglist opt.gitcmd; exit 0
           | Rename,  Size,     _         -> (Printf.eprintf "Size only supported to be prepended\n%!"; exit 1)
           (* --------------------------------- *)
-          | Move,    DateTime, _         -> Movers.movefiles_to_dir mappinglist; exit 0
+          | Move,    DateTime, _         -> Movers.movefiles_to_dir mappinglist opt.gitcmd; exit 0
           (* --------------------------------- *)
-          | Move,    Md5,      _         -> Movers.movefiles_to_dir mappinglist; exit 0
-          | Move,    Size,     _         -> Movers.movefiles_to_dir mappinglist; exit 0
+          | Move,    Md5,      _         -> Movers.movefiles_to_dir mappinglist opt.gitcmd; exit 0
+          | Move,    Size,     _         -> Movers.movefiles_to_dir mappinglist opt.gitcmd; exit 0
           | _,       Dirname,  _         -> no_valid_option_was_selected "-dn option only allowed with prepend-mode"
           | _,       _,        Default    -> () (* is unneded *)
           | No_action, _        , _       -> () (* is excluded already *)
