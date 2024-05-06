@@ -21,9 +21,11 @@ let filerename rnmode mappinglist_fileinfo_prperty =
 
   let namecreator = get_newname_from_propstring rnmode in
 
-  List.iter (fun (fileinfo, propname) -> let newname = namecreator fileinfo propname in
-                                         Fswrite.do_rename fileinfo newname
-            ) mappinglist_fileinfo_prperty
+  let renamer (fileinfo, propname) =
+    let newname = namecreator fileinfo propname in
+    Fswrite.do_rename fileinfo newname
+  in
+    List.iter renamer mappinglist_fileinfo_prperty
 
 
 
