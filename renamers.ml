@@ -30,7 +30,6 @@ let filerename rnmode mappinglist_fileinfo_prperty =
 
 
 
-
+(* ancient dev-helper *)
 let prtstuff cwd fn fndn ddn newbase = Printf.printf "%40s %40s %40s %40s %40s\n" cwd fn fndn ddn newbase
-
 

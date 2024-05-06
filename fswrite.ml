@@ -7,14 +7,10 @@
   Use this software at your own risk.
 *)
 
-
-let create_dir_if_not_exists dirname =
-  if Sys.file_exists dirname then () else Unix.mkdir dirname 0o700
-
-
 type oldname = string
 type newname = string
 type dirname = string
+
 
 module type Provider =
 sig
@@ -25,6 +21,13 @@ end
 
 module Action = functor (IN: Provider) ->
 struct
+    (* helper to create directories *)
+    (* ---------------------------- *)
+    let create_dir_if_not_exists dirname =
+      if Sys.file_exists dirname then () else Unix.mkdir dirname 0o700
+
+    (* file-mover function *)
+    (* ------------------- *)
     let move_files_to_newdir namemapping =
       List.iter ( fun (fname, dir_name) ->
                                       create_dir_if_not_exists dir_name;
@@ -33,8 +36,8 @@ struct
                 ) namemapping
 
 
-
-    (* the actual renamer function which takes a HOF 'renamer' to get the new name *)
+    (* file renamer function *)
+    (* --------------------- *)
     let do_rename (fileinfo : Fileinfo.fileinfo) newname =
       if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" fileinfo.fni.filename newname )
       else
@@ -45,6 +48,7 @@ struct
           IN.rename_or_print fileinfo.fni.filename newname
         end
 end
+
 
 
 module Renamer : Provider =
