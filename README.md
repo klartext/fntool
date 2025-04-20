@@ -41,7 +41,11 @@ files will solve the task.
 
 ## Prerequisites
 You need the standard installation of OCaml installed (release 4.04 or newer).
-No extra packages are needed.
+
+You also need `ocamlfind` to be installed (because OCamlMakefile uses it).
+On ARCH-Linux this would need the package `ocaml-findlib` to be installed (or use `opam` to install `ocamlfind`).
+
+No additional libraries/packages are needed.
 
 ## Compilation
 Just type the 'make' command at the shell prompt and the binary 'fntool' should be built
