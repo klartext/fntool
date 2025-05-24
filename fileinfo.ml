@@ -37,7 +37,9 @@ let size_of_file fname =
 
 let size_of_file_as_string fname = size_of_file fname |> string_of_int
 
-let digest_of_file filename = Digest.to_hex (Digest.file filename)
+let digest_of_file filename =
+  prerr_endline ("calculating md5-digest for file " ^ filename);
+  Digest.to_hex (Digest.file filename)
 
 
 (* ============================================ *)
