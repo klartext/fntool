@@ -38,11 +38,6 @@ let date_of_file  ?(month=false)
   end
 
 
-
-
-(* ---------------- *)
-let digest_of_file filename = Digest.to_hex (Digest.file filename)
-
 (* --------------- *)
 let datestring fname =
   let open Cli in

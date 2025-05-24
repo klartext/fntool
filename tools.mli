@@ -3,7 +3,6 @@ val date_of_file :
   ?day:bool ->
   ?hours:bool ->
   ?minutes:bool -> ?seconds:bool -> ?usefloat:bool -> string -> string
-val digest_of_file : string -> string
 val datestring : string -> string
 val is_regfile : string -> bool
 val is_not_directory : string -> bool
