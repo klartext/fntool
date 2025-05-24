@@ -45,12 +45,18 @@ let () =
     match opt.move, opt.rename with
       | true,  false -> action := Move
       | false, true  -> action := Rename
-      | false, false -> no_valid_option_was_selected "please select either -mv or -rn"
-      | true,  true  -> no_valid_option_was_selected "don't select both options: -mv and -rn"
+      | false, false -> no_valid_option_was_selected
+                          "please select either -mv or -rn"
+      | true,  true  -> no_valid_option_was_selected
+                          "don't select both options: -mv and -rn"
   end;
 
 
-  let use_time = if opt.year || opt.month || opt.day || opt.hour || opt.min || opt.sec || opt.usefloat then true else false in
+  let use_time =
+    if opt.year || opt.month || opt.day || opt.hour || opt.min || opt.sec || opt.usefloat
+    then true
+    else false
+  in
   let use_md5  = if opt.md5 then true else false in
   let use_dirname = opt.dn in
   let use_size    = opt.size in
@@ -62,9 +68,11 @@ let () =
       | false, true,  false, false -> DateTime
       | true,  false,  false, false-> Size
       (* ------------------------------------------------- *)
-      | false, false, false, false -> no_valid_option_was_selected "you have to select one of: time switch, md5 switch, dirname switch"
+      | false, false, false, false -> no_valid_option_was_selected
+            "you have to select one of: time switch, md5 switch, dirname switch"
       (* ------------------------------------------------- *)
-      | _                   -> no_valid_option_was_selected "only use one option of: time, md5 or dirname"
+      | _                   -> no_valid_option_was_selected
+                                "only use one option of: time, md5 or dirname"
       (* ------------------------------------------------- *)
   in
 
@@ -94,12 +102,19 @@ let () =
   (* if md5 and allow-dir selected, then print message about on ignored directories *)
   if use_md5 && opt.allow_dir && List.length ign > 0 then
   begin
-    Printf.eprintf "Can't calculate checksums for directories, ignoring the following dirs:\n%!";
+    Printf.eprintf
+      "Can't calculate checksums for directories, ignoring the following dirs:\n%!";
     List.iter ( fun fname -> Printf.eprintf "ignoring directory: %s\n%!" fname ) ign
   end;
 
   (* look up file-information and extract the property-string *)
-  let selector = match selected_prop with DateTime -> `date | Md5 -> `md5 | Size -> `size | Dirname -> `dirname in
+  let selector =
+    match selected_prop with
+      | DateTime -> `date
+      | Md5      -> `md5
+      | Size     -> `size
+      | Dirname  -> `dirname
+  in
   let mappinglist = Fileinfo.create_mappinglist selector filenames in (* (fileinfo * extracted_property) list *)
 
   (* call the functions that do the renaming / moving *)

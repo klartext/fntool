@@ -9,11 +9,19 @@
 
 (* --------------- *)
 let movefiles_to_dir mappinglist only_gitcmd =
-  let sorted = List.sort ( fun item1 item2 -> compare (snd item1) (snd item2) ) mappinglist in (* sort by dirname *)
-  let fnsorted = List.map (fun ((fileinfo : Fileinfo.fileinfo), dir) -> fileinfo.fni.filename, dir) sorted in
+  let sorted = (* sort by dirname *)
+    List.sort
+      ( fun item1 item2 -> compare (snd item1) (snd item2) )
+      mappinglist
+  in
+  let fnsorted =
+    List.map
+      (fun ((fileinfo : Fileinfo.fileinfo), dir) -> fileinfo.fni.filename, dir)
+      sorted
+  in
 
   if only_gitcmd
-  then Fswrite.gitcmd_move_files_to_newdir fnsorted
-  else Fswrite.move_files_to_newdir fnsorted
+    then Fswrite.gitcmd_move_files_to_newdir fnsorted
+    else Fswrite.move_files_to_newdir fnsorted
 
 

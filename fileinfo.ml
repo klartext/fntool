@@ -65,8 +65,16 @@ let create_prepend_dirname fname =
   let ddn   = Tools.directdir usepath in
   let file_basename = filenameinfo.basename in
 
-  let new_basename = if fndn = "." then ddn ^ "_" ^ file_basename else (Tools.directdir fndn) ^ "_" ^ file_basename in
-  let new_fullpath = if fndn = "." then new_basename else Filename.concat fndn new_basename in
+  let new_basename =
+    if fndn = "."
+    then ddn ^ "_" ^ file_basename
+    else (Tools.directdir fndn) ^ "_" ^ file_basename
+  in
+  let new_fullpath =
+    if fndn = "."
+    then new_basename
+    else Filename.concat fndn new_basename
+  in
 
   new_fullpath
 

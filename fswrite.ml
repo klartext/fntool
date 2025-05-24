@@ -30,16 +30,21 @@ struct
     (* ------------------- *)
     let move_files_to_newdir namemapping =
       List.iter ( fun (fname, dir_name) ->
-                                      create_dir_if_not_exists dir_name;
-                                      let newname = Filename.concat dir_name fname in
-                                      IN.move_or_print fname newname dir_name
+                                create_dir_if_not_exists dir_name;
+                                let newname = Filename.concat dir_name fname in
+                                IN.move_or_print fname newname dir_name
                 ) namemapping
 
 
     (* file renamer function *)
     (* --------------------- *)
     let do_rename (fileinfo : Fileinfo.fileinfo) newname =
-      if Sys.file_exists newname then (Printf.eprintf "target-filename exists already: could not rename %s to %s\n" fileinfo.fni.filename newname )
+      if Sys.file_exists newname
+      then
+        Printf.eprintf
+         "target-filename exists already: could not rename %s to %s\n"
+         fileinfo.fni.filename
+         newname
       else
         begin
           IN.rename_or_print fileinfo.fni.filename newname
@@ -64,8 +69,11 @@ end
 
 module GitPrinter : Provider =
 struct
-    let move_or_print oldname newname dirname = Printf.printf "git mv %s %s\n" oldname dirname
-    let rename_or_print oldname newname = Printf.printf "git mv %s %s\n" oldname newname
+  let move_or_print oldname newname dirname =
+    Printf.printf "git mv %s %s\n" oldname dirname
+
+  let rename_or_print oldname newname =
+    Printf.printf "git mv %s %s\n" oldname newname
 end
 
 
