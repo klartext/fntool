@@ -16,9 +16,8 @@ type fileinfo = {
 val size_of_file : string -> int
 val size_of_file_as_string : string -> string
 val digest_of_file : string -> string
-val getfilenameinfo : string -> fninfo
+val make_fileinfo : string -> fileinfo
 val create_prepend_dirname : string -> string
-val getfileinfo : [> `date | `md5 | `size ] -> string -> fileinfo
 val create_mappinglist :
   [< `date | `dirname | `md5 | `size > `date `md5 `size ] ->
   string list -> (fileinfo * string) list

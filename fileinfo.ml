@@ -84,16 +84,11 @@ let create_prepend_dirname fname =
 
 
 (* --------------------------------------- *)
-let getfileinfo propselector  fname =
-  let dt  = if propselector = `date then None else None in (* add that later *)
-  let md5 = if propselector = `md5 then Some (digest_of_file fname) else None in
-  let sz  = if propselector = `size then Some (size_of_file_as_string fname) else None in
-
-  { fni = getfilenameinfo fname; digest = md5; datetime = dt; sizestr = sz }
-
+let make_fileinfo fname =
+  { fni = getfilenameinfo fname; digest = None; datetime = None; sizestr = None }
 
 let create_mappinglist selection filenames =
-  let fileinfos = List.map (fun fn -> getfileinfo selection fn) filenames in
+  let fileinfos = List.map (fun fn -> make_fileinfo fn) filenames in
   let property_extractor =
     match selection with
       | `date -> Tools.datestring (* extracted property *)
@@ -101,7 +96,9 @@ let create_mappinglist selection filenames =
       | `size -> size_of_file_as_string (* extracted property *)
       | `dirname -> create_prepend_dirname (* complete relacement (newname), not only property *)
   in
-  List.map (fun fileinfo -> (fileinfo, property_extractor fileinfo.fni.filename)) fileinfos
+    List.map
+      (fun fileinfo -> (fileinfo, property_extractor fileinfo.fni.filename))
+      fileinfos
 
 
 
