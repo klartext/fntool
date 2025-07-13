@@ -21,3 +21,5 @@ val create_prepend_dirname : string -> string
 val create_mappinglist :
   [< `date | `dirname | `md5 | `size > `date `md5 `size ] ->
   string list -> (fileinfo * string) list
+
+val show_mappinglist : (fileinfo * string) list -> unit

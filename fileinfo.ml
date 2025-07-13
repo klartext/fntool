@@ -28,6 +28,14 @@ type fileinfo = {
                 }
 
 
+let show_fileinfo m =
+  Printf.printf "filename:   %s\n" m.filename;
+  Printf.printf "dirname:    %s\n" m.dirname;
+  Printf.printf "basename:   %s\n" m.basename;
+  Printf.printf "chopped fn: %s\n" m.chopped_filename;
+  Printf.printf "chopped bn: %s\n" m.chopped_basename;
+  Printf.printf "extension:  %s\n" m.extension
+
 (* Helper functions *)
 (* ================ *)
 let size_of_file fname =
@@ -100,6 +108,5 @@ let create_mappinglist selection filenames =
       (fun fileinfo -> (fileinfo, property_extractor fileinfo.fni.filename))
       fileinfos
 
-
-
-
+let show_mappinglist ml =
+  List.iter ( fun (fi, str) -> show_fileinfo fi.fni;Printf.printf "propname:   %s\n" str) ml
