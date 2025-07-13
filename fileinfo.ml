@@ -22,9 +22,7 @@ type dt = { datetime: float }
 
 type fileinfo = {
                   fni : fninfo;
-                  digest: string option;
                   datetime: dt option;
-                  sizestr: string option;
                 }
 
 
@@ -93,7 +91,7 @@ let create_prepend_dirname fname =
 
 (* --------------------------------------- *)
 let make_fileinfo fname =
-  { fni = getfilenameinfo fname; digest = None; datetime = None; sizestr = None }
+  { fni = getfilenameinfo fname; datetime = None }
 
 let create_mappinglist selection filenames =
   let fileinfos = List.map (fun fn -> make_fileinfo fn) filenames in

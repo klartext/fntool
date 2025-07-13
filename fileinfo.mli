@@ -9,9 +9,7 @@ type fninfo = {
 type dt = { datetime : float; }
 type fileinfo = {
   fni : fninfo;
-  digest : string option;
   datetime : dt option;
-  sizestr : string option;
 }
 val size_of_file : string -> int
 val size_of_file_as_string : string -> string
