@@ -12,11 +12,11 @@
 let get_newname_from_propstring select (fileinfo : Fileinfo.fileinfo) propstring =
   match select with
     | `Prepend -> Filename.concat
-                    fileinfo.fni.dirname
-                    (propstring ^ "_" ^ fileinfo.fni.basename)
+                    fileinfo.dirname
+                    (propstring ^ "_" ^ fileinfo.basename)
     | `Insert  -> Filename.concat
-                    fileinfo.fni.dirname
-                    (fileinfo.fni.chopped_basename ^ "." ^ propstring ^ fileinfo.fni.extension)
+                    fileinfo.dirname
+                    (fileinfo.chopped_basename ^ "." ^ propstring ^ fileinfo.extension)
     | `Replace -> propstring
 
 

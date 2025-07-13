@@ -43,11 +43,11 @@ struct
       then
         Printf.eprintf
          "target-filename exists already: could not rename %s to %s\n"
-         fileinfo.fni.filename
+         fileinfo.filename
          newname
       else
         begin
-          IN.rename_or_print fileinfo.fni.filename newname
+          IN.rename_or_print fileinfo.filename newname
         end
 end
 

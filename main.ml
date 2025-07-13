@@ -115,7 +115,7 @@ let () =
       | Size     -> `size
       | Dirname  -> `dirname
   in
-  let mappinglist = Fileinfo.create_mappinglist selector filenames in (* (fileinfo * extracted_property) list *)
+  let mappinglist = Fileinfo.create_mappinglist selector filenames in (* (fileinfo_old * extracted_property) list *)
 
   (* call the functions that do the renaming / moving *)
   (* append option is not implemented so far          *)

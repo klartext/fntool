@@ -16,7 +16,7 @@ let movefiles_to_dir mappinglist only_gitcmd =
   in
   let fnsorted =
     List.map
-      (fun ((fileinfo : Fileinfo.fileinfo), dir) -> fileinfo.fni.filename, dir)
+      (fun ((fileinfo : Fileinfo.fileinfo), dir) -> fileinfo.filename, dir)
       sorted
   in
 

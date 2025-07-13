@@ -7,7 +7,7 @@
   Use this software at your own risk.
 *)
 
-type fninfo = {
+type fileinfo = {
                 filename:         string;
                 dirname:          string;
                 basename:         string;
@@ -15,11 +15,6 @@ type fninfo = {
                 chopped_basename: string;
                 extension:        string;
               }
-
-
-type fileinfo = {
-                  fni : fninfo;
-                }
 
 
 let show_fileinfo m =
@@ -86,11 +81,8 @@ let create_prepend_dirname fname =
 
 
 (* --------------------------------------- *)
-let make_fileinfo fname =
-  { fni = getfilenameinfo fname }
-
 let create_mappinglist selection filenames =
-  let fileinfos = List.map (fun fn -> make_fileinfo fn) filenames in
+  let fileinfo_olds = List.map (fun fn -> getfilenameinfo fn) filenames in
   let property_extractor =
     match selection with
       | `date -> Tools.datestring (* extracted property *)
@@ -99,8 +91,8 @@ let create_mappinglist selection filenames =
       | `dirname -> create_prepend_dirname (* complete relacement (newname), not only property *)
   in
     List.map
-      (fun fileinfo -> (fileinfo, property_extractor fileinfo.fni.filename))
-      fileinfos
+      (fun fileinfo -> (fileinfo, property_extractor fileinfo.filename))
+      fileinfo_olds
 
 let show_mappinglist ml =
-  List.iter ( fun (fi, str) -> show_fileinfo fi.fni;Printf.printf "propname:   %s\n" str) ml
+  List.iter ( fun (fi, str) -> show_fileinfo fi;Printf.printf "propname:   %s\n" str) ml

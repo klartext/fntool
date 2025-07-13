@@ -1,4 +1,4 @@
-type fninfo = {
+type fileinfo = {
   filename : string;
   dirname : string;
   basename : string;
@@ -6,13 +6,9 @@ type fninfo = {
   chopped_basename : string;
   extension : string;
 }
-type fileinfo = {
-  fni : fninfo;
-}
 val size_of_file : string -> int
 val size_of_file_as_string : string -> string
 val digest_of_file : string -> string
-val make_fileinfo : string -> fileinfo
 val create_prepend_dirname : string -> string
 val create_mappinglist :
   [< `date | `dirname | `md5 | `size > `date `md5 `size ] ->
