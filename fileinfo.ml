@@ -17,12 +17,9 @@ type fninfo = {
               }
 
 
-type dt = { datetime: float }
-
-
 type fileinfo = {
                   fni : fninfo;
-                  datetime: dt option;
+                  datetime: float option;
                 }
 
 

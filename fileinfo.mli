@@ -6,10 +6,9 @@ type fninfo = {
   chopped_basename : string;
   extension : string;
 }
-type dt = { datetime : float; }
 type fileinfo = {
   fni : fninfo;
-  datetime : dt option;
+  datetime : float option;
 }
 val size_of_file : string -> int
 val size_of_file_as_string : string -> string
