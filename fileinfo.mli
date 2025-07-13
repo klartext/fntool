@@ -8,7 +8,6 @@ type fninfo = {
 }
 type fileinfo = {
   fni : fninfo;
-  datetime : float option;
 }
 val size_of_file : string -> int
 val size_of_file_as_string : string -> string
